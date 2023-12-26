@@ -1,0 +1,16 @@
+.list-group {
+  max-height: 40vh;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    padding: 0;
+    border: none;
+  }
+}

@@ -1,11 +1,66 @@
-<div class="dialog-overlay">
-  <div class="dialog-container">
-    <button class="btn btn-outline-primary" (click)="handleDirectFilesAddition()">Посмотри файлы (мнга)</button>
-    <input type="text" class="form-control" [(ngModel)]="testStr" />
-    <div>{{ testStr }}</div>
-    <button class="btn btn-outline-primary" (click)="tryReadDir()">ClickMe!</button>
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let item of listDir">{{ item }}</li>
-    </ul>
+<div class="main-container flex flex-column">
+  <div id="top-div" class="flex flex-column">
+    <div class="input-group mb-2">
+      <div class="form-floating">
+        <input
+          type="text"
+          id="root-folder-input"
+          class="form-control"
+          placeholder="root folder"
+          aria-label="Выберите корневую папку"
+          aria-describedby="button-root-folder"
+          [(ngModel)]="rootFolder"
+          (change)="handleRootChange()"
+        />
+        <label for="root-folder-input">Корневая папка</label>
+      </div>
+      <button class="btn btn-outline-primary" type="button" id="button-root-folder" (click)="chooseRootFolder()">Выбрать</button>
+      <button class="btn btn-outline-primary" type="button" id="button-root-folder" (click)="test()">Добавить файлы напрямую</button>
+    </div>
   </div>
+  <div class="input-group mb-2">
+    <div class="form-floating">
+      <input
+        type="text"
+        id="out-folder-input"
+        class="form-control"
+        placeholder="out folder"
+        [disabled]="isOutFolderEqualRootFolder"
+        aria-label="Выберите выходную папку"
+        [(ngModel)]="outFolder"
+      />
+      <label for="out-folder-input">Выходная папка</label>
+    </div>
+    <button class="btn btn-outline-secondary" type="button" id="button-root-folder" (click)="switchOutFolderLock()">
+      <img [src]="isOutFolderEqualRootFolder ? 'assets/icon-lock-closed.png' : 'assets/icon-lock-open.png'" />
+    </button>
+    <div class="form-floating">
+      <input type="text" id="out-file-name-input" class="form-control" placeholder="out file name" aria-label="Имя выходного файла" [(ngModel)]="outName" />
+      <label for="out-file-name-input">Имя выходного файла</label>
+    </div>
+    <span class="input-group-text">.docx</span>
+  </div>
+  <div id="additionalSettings" class="input-group mb-3">
+    <div class="input-group-text checkbox-div">
+      <input class="form-check-input me-2" type="checkbox" id="isRecursiveSwitch" [(ngModel)]="isRecursive" />
+      <label for="isRecursiveSwitch">Рекурсивно</label>
+    </div>
+    <div class="input-group-text">
+      <input name="nameModeSwitcher" class="form-check-input me-2" id="radioNameMode0" type="radio" checked (click)="nameMode = 'simple'" />
+      <label for="radioNameMode0">Только имя</label>
+    </div>
+    <div class="input-group-text">
+      <input name="nameModeSwitcher" class="form-check-input me-2" id="radioNameMode1" type="radio" (click)="nameMode = 'relative'" />
+      <label for="radioNameMode1">Относительные пути</label>
+    </div>
+    <div class="input-group-text">
+      <input name="nameModeSwitcher" class="form-check-input me-2" id="radioNameMode2" type="radio" (click)="nameMode = 'absolute'" />
+      <label for="radioNameMode2">Абсолютные пути</label>
+    </div>
+  </div>
+</div>
+<div id="bot-div" class="flex flex-row">
+  <div class="flex flex-column list-div"><app-items-list [nameMode]="nameMode" [itemsList]="filesInRootDirectory"></app-items-list></div>
+  <div class="flex">baaka</div>
+  <div class="flex flex-column list-div"><app-items-list [nameMode]="nameMode" [isRootData]="true" [itemsList]="filesChosen"></app-items-list></div>
 </div>
