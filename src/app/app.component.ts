@@ -30,7 +30,7 @@ export class AppComponent {
     this.outName = `${year + month + day}_result`;
   }
 
-  //TODO Добавить вывод в тостер для результатов действий
+  //TODO Добавить вывод в тостер для результатов действий или лог
 
   readRoot() {
     this.pcService

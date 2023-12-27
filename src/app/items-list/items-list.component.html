@@ -1,14 +1,13 @@
 <div class="input-group mb-1">
-  <input type="text" class="form-control" placeholder="Фильтр" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+  <input type="text" class="form-control" placeholder="Фильтр" [(ngModel)]="filterString" title='В качестве разделителя между фильтрами используйте "' />
   <button (click)="modeCase = !modeCase" [ngClass]="['btn', modeCase ? 'btn-secondary' : 'btn-outline-secondary']" type="button">Aa</button>
   <button (click)="modeStrict = !modeStrict" [ngClass]="['btn', modeStrict ? 'btn-secondary' : 'btn-outline-secondary']" type="button"><u>ab</u></button>
   <button (click)="modeRegex = !modeRegex" [ngClass]="['btn', modeRegex ? 'btn-secondary' : 'btn-outline-secondary']" type="button">*</button>
 </div>
-<div>Файлов {{ itemsList.length }}</div>
-<button class="btn btn-outline-primary" (click)="testDel()">ClickMe!</button>
+<div>Файлов {{ (itemsList | fileFilter : nameMode : modeCase : modeStrict : modeRegex : filterString).length }}/{{ itemsList.length }}</div>
 
 <ul class="list-group">
-  <li class="list-group-item" *ngFor="let item of itemsList">
+  <li class="list-group-item" *ngFor="let item of itemsList | fileFilter : nameMode : modeCase : modeStrict : modeRegex : filterString">
     <div>{{ item[nameMode] }}</div>
     <button *ngIf="isRootData" class="btn btn-outline-secondary"><img src="assets/icon-delete-cross.png" width="16px" height="16px" /></button>
   </li>

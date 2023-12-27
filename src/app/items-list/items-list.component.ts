@@ -15,10 +15,28 @@ export class ItemsListComponent {
   modeStrict: boolean = false;
   modeRegex: boolean = false;
 
+  filterString: string = "";
+
   constructor() {}
 
   testDel() {
     // this.itemsList.splice(0, 1);
     console.log(this.itemsList);
+  }
+
+  switchMode(modeName: string) {
+    switch (modeName) {
+      case "modeCase":
+        this.modeCase = !this.modeCase;
+        break;
+      case "modeStrict":
+        this.modeStrict = !this.modeStrict;
+        this.modeRegex = false;
+        break;
+      case "modeRegex":
+        this.modeRegex = !this.modeRegex;
+        this.modeStrict = false;
+        break;
+    }
   }
 }

@@ -30,7 +30,7 @@ input-group-text {
 
 #additionalSettings {
   display: flex;
-  
+
   div {
     flex: 1;
   }
@@ -38,8 +38,20 @@ input-group-text {
   div.checkbox-div {
     flex: 3;
   }
+
+  #arrows {
+    justify-content: center;
+  }
+}
+
+.no-border {
+  border: none;
 }
 
 app-items-list {
   width: 100%;
+}
+
+#deleteFromListImg {
+  transform: rotate(180deg);
 }

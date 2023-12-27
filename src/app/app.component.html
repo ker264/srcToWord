@@ -58,9 +58,12 @@
       <label for="radioNameMode2">Абсолютные пути</label>
     </div>
   </div>
-</div>
-<div id="bot-div" class="flex flex-row">
-  <div class="flex flex-column list-div"><app-items-list [nameMode]="nameMode" [itemsList]="filesInRootDirectory"></app-items-list></div>
-  <div class="flex">baaka</div>
-  <div class="flex flex-column list-div"><app-items-list [nameMode]="nameMode" [isRootData]="true" [itemsList]="filesChosen"></app-items-list></div>
+  <div id="bot-div" class="flex flex-row">
+    <div class="flex flex-column list-div"><app-items-list [nameMode]="nameMode" [itemsList]="filesInRootDirectory"></app-items-list></div>
+    <div id="arrows" class="flex flex-column">
+      <button type="button" class="btn btn-outline-secondary no-border"><img src="assets/icon-right-arrow.png" /></button>
+      <button type="button" class="btn btn-outline-secondary no-border"><img id="deleteFromListImg" src="assets/icon-right-arrow.png" /></button>
+    </div>
+    <div class="flex flex-column list-div"><app-items-list [nameMode]="nameMode" [isRootData]="true" [itemsList]="filesChosen"></app-items-list></div>
+  </div>
 </div>
