@@ -1,6 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+import * as _ from "lodash";
 import { IFileNames } from "src/interfaces/i-file-names";
 import { PcService } from "src/services/pc.service";
+import { ItemsListComponent } from "./items-list/items-list.component";
 
 @Component({
   selector: "app-root",
@@ -9,6 +11,9 @@ import { PcService } from "src/services/pc.service";
 })
 export class AppComponent {
   title = "electronAngular";
+
+  @ViewChild("rootList") rootListComponent!: ItemsListComponent;
+  @ViewChild("chosenList") chosenListComponent!: ItemsListComponent;
 
   isOutFolderEqualRootFolder: boolean = true;
   rootFolder: string = "";
@@ -56,7 +61,7 @@ export class AppComponent {
     // Если выходная директория залочена - изменяем её
     if (this.isOutFolderEqualRootFolder) this.outFolder = this.rootFolder;
     // Читаем корневую директорию
-    this.readRoot();
+    if (this.rootFolder != "") this.readRoot();
   }
 
   switchOutFolderLock() {
@@ -72,7 +77,27 @@ export class AppComponent {
       .catch((err) => console.log(err));
   }
 
-  test() {
-    console.log(this.isRecursive);
+  addToChosen() {
+    let newElems = _.differenceBy(this.rootListComponent.getFilteredList(), this.filesChosen, "absolute");
+    this.filesChosen.push(...newElems);
+  }
+
+  deleteFromChosen() {
+    this.filesChosen = _.differenceWith(this.filesChosen, this.chosenListComponent.getFilteredList(), (item1, item2) => item1.absolute == item2.absolute);
+  }
+
+  directFilesChoose() {
+    this.pcService
+      .directFileChoose()
+      .then((list) => this.filesChosen.push(..._.differenceBy(list, this.filesChosen, "absolute")))
+      .catch((err) => console.log(err));
+  }
+
+  //TODO перейти на toast
+  createDocx() {
+    this.pcService
+      .createDocx(this.filesChosen, this.outFolder != "" ? this.outFolder : "C:/", `${this.outName}.docx`)
+      .then((docxPath) => alert(`Файл создан\n${docxPath}`))
+      .catch((err) => alert(`Ошибка создания файла\n${err}`));
   }
 }

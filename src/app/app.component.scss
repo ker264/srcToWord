@@ -1,7 +1,9 @@
+.main-container {
+  height: 100%;
+}
+
 .flex {
   display: flex;
-  width: 100%;
-  height: 100%;
 }
 
 input-group-text {
@@ -16,7 +18,13 @@ input-group-text {
   flex-direction: column;
 }
 
+#top-div {
+  flex-grow: 0;
+}
+
 #bot-div {
+  flex-grow: 1;
+
   div {
     align-items: center;
     justify-content: center;
@@ -25,6 +33,10 @@ input-group-text {
 
   .list-div {
     flex: 4;
+  }
+
+  :not(#arrows) {
+    justify-content: flex-start;
   }
 }
 
@@ -38,10 +50,6 @@ input-group-text {
   div.checkbox-div {
     flex: 3;
   }
-
-  #arrows {
-    justify-content: center;
-  }
 }
 
 .no-border {
@@ -54,4 +62,8 @@ app-items-list {
 
 #deleteFromListImg {
   transform: rotate(180deg);
+}
+
+#startButtonDiv {
+  justify-content: flex-end;
 }

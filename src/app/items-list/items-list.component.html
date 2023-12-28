@@ -5,10 +5,11 @@
   <button (click)="modeRegex = !modeRegex" [ngClass]="['btn', modeRegex ? 'btn-secondary' : 'btn-outline-secondary']" type="button">*</button>
 </div>
 <div>Файлов {{ (itemsList | fileFilter : nameMode : modeCase : modeStrict : modeRegex : filterString).length }}/{{ itemsList.length }}</div>
-
 <ul class="list-group">
-  <li class="list-group-item" *ngFor="let item of itemsList | fileFilter : nameMode : modeCase : modeStrict : modeRegex : filterString">
+  <li class="list-group-item" *ngFor="let item of itemsList | fileFilter : nameMode : modeCase : modeStrict : modeRegex : filterString; index as i">
     <div>{{ item[nameMode] }}</div>
-    <button *ngIf="isRootData" class="btn btn-outline-secondary"><img src="assets/icon-delete-cross.png" width="16px" height="16px" /></button>
+    <button *ngIf="isRootData" class="btn btn-outline-secondary" (click)="deleteItemFromList(item)">
+      <img src="assets/icon-delete-cross.png" width="16px" height="16px" />
+    </button>
   </li>
 </ul>

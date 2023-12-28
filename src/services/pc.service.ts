@@ -35,7 +35,7 @@ export class PcService {
     });
   }
 
-  directFileChoose(): Promise<string[]> {
+  directFileChoose(): Promise<IFileNames[]> {
     return new Promise((resolve, reject) => {
       if (!this._ipc) {
         reject("no ips");
@@ -62,6 +62,28 @@ export class PcService {
         resolve(path);
       });
       this._ipc.once("choose-root-error", (event, error) => {
+        reject(error);
+      });
+    });
+  }
+
+  /**
+   * Создает docx файл из содержимого переданных файлов
+   * @param filesList - список файлов из которых создать docx
+   * @returns возвращает путь к docx в случае успеха
+   */
+  createDocx(filesList: IFileNames[], ...resultDirParts: string[]): Promise<string> {
+    //TODO сделать кнопку открыть в проводнике
+    return new Promise((resolve, reject) => {
+      if (!this._ipc) {
+        reject("no ips");
+        return;
+      }
+      this._ipc.send("create-docx", filesList, resultDirParts);
+      this._ipc.once("create-docx-success", (event, path) => {
+        resolve(path);
+      });
+      this._ipc.once("create-docx-error", (event, error) => {
         reject(error);
       });
     });

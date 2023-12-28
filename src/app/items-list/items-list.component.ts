@@ -1,5 +1,7 @@
 import { Component, Input } from "@angular/core";
+import * as _ from "lodash";
 import { IFileNames } from "src/interfaces/i-file-names";
+import { FileFilterPipe } from "src/pipes/file-filter.pipe";
 
 @Component({
   selector: "app-items-list",
@@ -11,6 +13,8 @@ export class ItemsListComponent {
   @Input() isRootData: boolean = false;
   @Input() nameMode: keyof IFileNames = "simple";
 
+  private filter = new FileFilterPipe();
+
   modeCase: boolean = false;
   modeStrict: boolean = false;
   modeRegex: boolean = false;
@@ -19,9 +23,12 @@ export class ItemsListComponent {
 
   constructor() {}
 
-  testDel() {
-    // this.itemsList.splice(0, 1);
-    console.log(this.itemsList);
+  getFilteredList(): IFileNames[] {
+    return this.filter.transform(this.itemsList, this.nameMode, this.modeCase, this.modeStrict, this.modeRegex, this.filterString);
+  }
+
+  deleteItemFromList(item: IFileNames) {
+    _.remove(this.itemsList, (itemInList) => itemInList.absolute == item.absolute);
   }
 
   switchMode(modeName: string) {

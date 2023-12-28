@@ -3,8 +3,11 @@
 /* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
 
+html,
 body {
-  width: 100%;
   height: 100%;
+}
+
+body {
   padding: 1%;
 }
