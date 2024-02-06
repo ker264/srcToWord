@@ -1,8 +1,24 @@
 <div class="input-group mb-1">
-  <input type="text" class="form-control" placeholder="Фильтр" [(ngModel)]="filterString" title='В качестве разделителя между фильтрами используйте "' />
-  <button (click)="modeCase = !modeCase" [ngClass]="['btn', modeCase ? 'btn-secondary' : 'btn-outline-secondary']" type="button">Aa</button>
-  <button (click)="modeStrict = !modeStrict" [ngClass]="['btn', modeStrict ? 'btn-secondary' : 'btn-outline-secondary']" type="button"><u>ab</u></button>
-  <button (click)="modeRegex = !modeRegex" [ngClass]="['btn', modeRegex ? 'btn-secondary' : 'btn-outline-secondary']" type="button">*</button>
+  <input type="text" class="form-control" placeholder="Фильтр" [(ngModel)]="filterString" title="В качестве разделителя между фильтрами используйте ," />
+  <button (click)="modeCase = !modeCase" [ngClass]="['btn', modeCase ? 'btn-secondary' : 'btn-outline-secondary']" type="button" title="Учитывать регистр">
+    Aa
+  </button>
+  <button
+    (click)="modeStrict = !modeStrict"
+    [ngClass]="['btn', modeStrict ? 'btn-secondary' : 'btn-outline-secondary']"
+    type="button"
+    title="Полное совпадение"
+  >
+    <u>ab</u>
+  </button>
+  <button
+    (click)="modeRegex = !modeRegex"
+    [ngClass]="['btn', modeRegex ? 'btn-secondary' : 'btn-outline-secondary']"
+    type="button"
+    title="Регулярные выражения"
+  >
+    *
+  </button>
 </div>
 <div>Файлов {{ (itemsList | fileFilter : nameMode : modeCase : modeStrict : modeRegex : filterString).length }}/{{ itemsList.length }}</div>
 <ul class="list-group">

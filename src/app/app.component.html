@@ -15,7 +15,7 @@
         <label for="root-folder-input">Корневая папка</label>
       </div>
       <button class="btn btn-outline-primary" type="button" id="button-root-folder" (click)="chooseRootFolder()">Выбрать</button>
-      <button class="btn btn-outline-primary" type="button" id="button-root-folder" (click)="directFilesChoose()">Добавить файлы напрямую</button>
+      <button class="btn btn-outline-primary" type="button" (click)="directFilesChoose()">Добавить файлы напрямую</button>
     </div>
     <div class="input-group mb-2">
       <div class="form-floating">
@@ -27,6 +27,7 @@
           [disabled]="isOutFolderEqualRootFolder"
           aria-label="Выберите выходную папку"
           [(ngModel)]="outFolder"
+          (change)="handleRootChange()"
         />
         <label for="out-folder-input">Выходная папка</label>
       </div>
@@ -72,5 +73,12 @@
       <app-items-list #chosenList [nameMode]="nameMode" [isRootData]="true" [itemsList]="filesChosen"></app-items-list>
     </div>
   </div>
-  <div id="startButtonDiv" class="flex flex-row"><button class="btn btn-outline-success" (click)="createDocx()">Создать файл</button></div>
+  <div id="buttonsDiv" class="flex flex-row">
+    <button id="settingsButton" class="btn btn-outline-danger" (click)="manageSettingsMenu(true)">
+      <img height="32" width="32" src="assets/icon-settings.png" />
+    </button>
+    <button class="btn btn-outline-success" (click)="createDocx()">Создать файл</button>
+  </div>
 </div>
+
+<app-settings-menu *ngIf="isShowSettings" (closeSettingsMenu)="manageSettingsMenu(false)"></app-settings-menu>

@@ -8,7 +8,7 @@ import * as _ from "lodash";
 export class FileFilterPipe implements PipeTransform {
   transform(rawList: IFileNames[], nameMode: keyof IFileNames, modeCase: boolean, modeStrict: boolean, modeRegex: boolean, filterString: string): IFileNames[] {
     if (filterString === "") return rawList;
-    let filtersList: string[] = (!modeCase ? _.toLower(filterString) : filterString).split('"');
+    let filtersList: string[] = (!modeCase ? _.toLower(filterString) : filterString).split(",");
 
     return rawList.filter((item) => {
       let itemName: string = item[nameMode];

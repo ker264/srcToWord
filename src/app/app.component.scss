@@ -64,6 +64,10 @@ app-items-list {
   transform: rotate(180deg);
 }
 
-#startButtonDiv {
-  justify-content: flex-end;
+#buttonsDiv {
+  justify-content: space-between;
+
+  #settingsButton {
+    padding: 5px;
+  }
 }

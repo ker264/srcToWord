@@ -1,69 +1,41 @@
-import { Injectable } from "@angular/core";
-import * as electron from "electron";
+import { EventEmitter, Injectable } from "@angular/core";
 import { IFileNames } from "src/interfaces/i-file-names";
+import { CreateDocx, ReadDirectory, SelectDirectory, SelectFilesDirectly } from "wailsjs/go/main/App";
+import { EventsEmit, EventsOn } from "wailsjs/runtime/runtime";
 
 @Injectable({
   providedIn: "root",
 })
 export class PcService {
-  _ipc: electron.IpcRenderer | undefined;
+  public messageReceived: EventEmitter<any> = new EventEmitter();
+
   constructor() {
-    if (window.require) {
-      try {
-        this._ipc = window.require("electron").ipcRenderer;
-      } catch (e) {
-        throw e;
-      }
-    } else {
-      console.warn("Electron's IPC was not loaded");
-    }
-  }
-
-  readFilesInDirectory(directoryPath: string, isRecursive: boolean): Promise<IFileNames[]> {
-    return new Promise((resolve, reject) => {
-      if (!this._ipc) {
-        reject("no ips");
-        return;
-      }
-      this._ipc.send("read-directory", directoryPath, isRecursive);
-      this._ipc.once("directory-read", (event, files) => {
-        resolve(files);
-      });
-      this._ipc.once("directory-read-error", (event, error) => {
-        reject(error);
-      });
+    EventsOn("message", (message) => {
+      this.messageReceived.emit(message);
     });
   }
 
-  directFileChoose(): Promise<IFileNames[]> {
+  public readFilesInDirectory(directoryPath: string, isRecursive: boolean): Promise<IFileNames[]> {
     return new Promise((resolve, reject) => {
-      if (!this._ipc) {
-        reject("no ips");
-        return;
-      }
-      this._ipc.send("open-file-dialog");
-      this._ipc.once("selected-files", (event, files) => {
-        resolve(files);
-      });
-      this._ipc.once("open-file-dialog-error", (event, error) => {
-        reject(error);
-      });
+      ReadDirectory(directoryPath, isRecursive)
+        .then((data) => resolve(data))
+        .catch((err) => reject(err));
     });
   }
 
-  chooseRootFolder(): Promise<string> {
+  public directFileChoose(): Promise<IFileNames[]> {
     return new Promise((resolve, reject) => {
-      if (!this._ipc) {
-        reject("no ips");
-        return;
-      }
-      this._ipc.send("choose-root");
-      this._ipc.once("choose-root-success", (event, path) => {
-        resolve(path);
-      });
-      this._ipc.once("choose-root-error", (event, error) => {
-        reject(error);
-      });
+      SelectFilesDirectly()
+        .then((res) => resolve(res))
+        .catch((err) => reject(err));
+    });
+  }
+
+  public chooseRootFolder(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      SelectDirectory()
+        .then((res) => resolve(res))
+        .catch((err) => reject(err));
     });
   }
 
@@ -72,20 +44,11 @@ export class PcService {
    * @param filesList - список файлов из которых создать docx
    * @returns возвращает путь к docx в случае успеха
    */
-  createDocx(filesList: IFileNames[], ...resultDirParts: string[]): Promise<string> {
-    //TODO сделать кнопку открыть в проводнике
+  public createDocx(filesList: IFileNames[], ...resultDirParts: string[]): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (!this._ipc) {
-        reject("no ips");
-        return;
-      }
-      this._ipc.send("create-docx", filesList, resultDirParts);
-      this._ipc.once("create-docx-success", (event, path) => {
-        resolve(path);
-      });
-      this._ipc.once("create-docx-error", (event, error) => {
-        reject(error);
-      });
+      CreateDocx(filesList, resultDirParts)
+        .then((docxFilePath) => resolve(docxFilePath))
+        .catch((err) => reject(err));
     });
   }
 }

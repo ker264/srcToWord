@@ -2,6 +2,8 @@ import { Component, ViewChild } from "@angular/core";
 import * as _ from "lodash";
 import { IFileNames } from "src/interfaces/i-file-names";
 import { PcService } from "src/services/pc.service";
+import { HandleRootDirectorySetOnProgrammStart } from "wailsjs/go/main/App";
+import { WindowSetSize } from "wailsjs/runtime/runtime";
 import { ItemsListComponent } from "./items-list/items-list.component";
 
 @Component({
@@ -26,6 +28,8 @@ export class AppComponent {
   filesInRootDirectory: IFileNames[] = [];
   filesChosen: IFileNames[] = [];
 
+  isShowSettings = false;
+
   constructor(private pcService: PcService) {
     let today = new Date(Date.now());
     let year = today.getFullYear().toString().slice(-2);
@@ -33,14 +37,31 @@ export class AppComponent {
     let day = today.getDate().toString().padStart(2, "0");
 
     this.outName = `${year + month + day}_result`;
+
+    this.pcService.messageReceived.subscribe((message) => {
+      console.log("Received message from backend:", message);
+    });
+
+    // Задаем относительные размеры окна
+    WindowSetSize(Math.round(window.screen.width * 0.6), Math.round(window.screen.height * 0.75));
+
+    // Проверяем запущена ли программа из контекстного меню и если да меняем корневую папку
+    HandleRootDirectorySetOnProgrammStart()
+      .then((path) => {
+        this.rootFolder = path;
+        this.handleRootChange();
+      })
+      .catch((err) => alert(err));
   }
 
-  //TODO Добавить вывод в тостер для результатов действий или лог
-
+  /**
+   * Прочитать содержимое корневой папки с помощью сервиса
+   */
   readRoot() {
     this.pcService
       .readFilesInDirectory(this.rootFolder, this.isRecursive)
       .then((result) => {
+        console.log(result);
         this.filesInRootDirectory = [];
         this.filesInRootDirectory.push(...result);
       })
@@ -66,6 +87,8 @@ export class AppComponent {
 
   switchOutFolderLock() {
     this.isOutFolderEqualRootFolder = !this.isOutFolderEqualRootFolder;
+
+    if (this.isOutFolderEqualRootFolder) this.outFolder = this.rootFolder;
   }
 
   handleDirectFilesAddition() {
@@ -93,11 +116,17 @@ export class AppComponent {
       .catch((err) => console.log(err));
   }
 
-  //TODO перейти на toast
   createDocx() {
     this.pcService
       .createDocx(this.filesChosen, this.outFolder != "" ? this.outFolder : "C:/", `${this.outName}.docx`)
       .then((docxPath) => alert(`Файл создан\n${docxPath}`))
       .catch((err) => alert(`Ошибка создания файла\n${err}`));
+  }
+
+  /**
+   * Переключить меню настроек
+   */
+  manageSettingsMenu(state: boolean) {
+    this.isShowSettings = state;
   }
 }
