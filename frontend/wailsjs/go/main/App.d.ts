@@ -4,7 +4,7 @@ import {main} from '../models';
 
 export function CheckRegedit():Promise<boolean>;
 
-export function CreateDocx(arg1:Array<main.IFileNames>,arg2:Array<string>):Promise<string>;
+export function CreateDocx(arg1:Array<main.IFileNames>,arg2:Array<string>,arg3:string):Promise<string>;
 
 export function HandleRootDirectorySetOnProgrammStart():Promise<string>;
 

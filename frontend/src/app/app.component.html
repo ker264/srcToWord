@@ -1,0 +1,109 @@
+<div class="main-container flex flex-column">
+    <div id="top-div" class="flex flex-column">
+        <div class="input-group mb-2">
+            <div class="form-floating">
+                <input
+                    type="text"
+                    id="root-folder-input"
+                    class="form-control"
+                    placeholder="root folder"
+                    aria-label="Выберите корневую папку"
+                    aria-describedby="button-root-folder"
+                    [(ngModel)]="rootFolder"
+                    (change)="handleRootChange()"
+                />
+                <label for="root-folder-input">Корневая папка</label>
+            </div>
+            <button class="btn btn-outline-primary" type="button" id="button-root-folder" (click)="chooseRootFolder()">Выбрать</button>
+            <button class="btn btn-outline-primary" type="button" (click)="directFilesChoose()">Добавить файлы напрямую</button>
+        </div>
+        <div class="input-group mb-2">
+            <div class="form-floating">
+                <input
+                    type="text"
+                    id="out-folder-input"
+                    class="form-control"
+                    placeholder="out folder"
+                    [disabled]="isOutFolderEqualRootFolder"
+                    aria-label="Выберите выходную папку"
+                    [(ngModel)]="outFolder"
+                    (change)="handleRootChange()"
+                />
+                <label for="out-folder-input">Выходная папка</label>
+            </div>
+            <button class="btn btn-outline-secondary" type="button" id="button-root-folder" (click)="switchOutFolderLock()">
+                <img [src]="isOutFolderEqualRootFolder ? 'assets/icon-lock-closed.png' : 'assets/icon-lock-open.png'" />
+            </button>
+            <div class="form-floating">
+                <input
+                    type="text"
+                    id="out-file-name-input"
+                    class="form-control"
+                    placeholder="out file name"
+                    aria-label="Имя выходного файла"
+                    [(ngModel)]="outName"
+                />
+                <label for="out-file-name-input">Имя выходного файла</label>
+            </div>
+            <span class="input-group-text">.docx</span>
+        </div>
+        <div id="additionalSettings" class="input-group mb-3">
+            <div class="input-group-text checkbox-div">
+                <input class="form-check-input me-2" type="checkbox" id="isRecursiveSwitch" (change)="handleRootChange()" [(ngModel)]="isRecursive" />
+                <label for="isRecursiveSwitch">Рекурсивно</label>
+            </div>
+            <div class="input-group-text">
+                <input name="nameModeSwitcher" class="form-check-input me-2" id="radioNameMode0" type="radio" checked (click)="nameMode = 'simple'" />
+                <label for="radioNameMode0">Только имя</label>
+            </div>
+            <div class="input-group-text">
+                <input name="nameModeSwitcher" class="form-check-input me-2" id="radioNameMode1" type="radio" (click)="nameMode = 'relative'" />
+                <label for="radioNameMode1">Относительные пути</label>
+            </div>
+            <div class="input-group-text">
+                <input name="nameModeSwitcher" class="form-check-input me-2" id="radioNameMode2" type="radio" (click)="nameMode = 'absolute'" />
+                <label for="radioNameMode2">Абсолютные пути</label>
+            </div>
+        </div>
+    </div>
+    <div id="bot-div" class="flex flex-row">
+        <div class="flex flex-column list-div">
+            <app-items-list #rootList (addItem)="addItemToChosenList($event)" [nameMode]="nameMode" [itemsList]="filesInRootDirectory"></app-items-list>
+        </div>
+        <div id="arrows" class="flex flex-column">
+            <button (click)="addToChosen()" type="button" class="btn btn-outline-secondary no-border">
+                <img id="addFromListImg" src="assets/icon-right-arrow.png" />
+            </button>
+            <button (click)="deleteFromChosen()" type="button" class="btn btn-outline-secondary no-border">
+                <img id="deleteFromListImg" src="assets/icon-right-arrow.png" />
+            </button>
+        </div>
+        <div class="flex flex-column list-div">
+            <app-items-list #chosenList [nameMode]="nameMode" [isChosenList]="true" [itemsList]="filesChosen"></app-items-list>
+        </div>
+    </div>
+    <div id="buttonsDiv" class="flex flex-row">
+        <button id="settingsButton" class="btn btn-outline-danger" (click)="manageSettingsMenu(true)">
+            <img height="32" width="32" src="assets/icon-settings.png" />
+        </button>
+        <div class="flex flex-row align-items-center gap-2">
+            <div ngbDropdown class="d-inline-block" placement="top-end">
+                <button type="button" class="btn btn-outline-primary" id="dropdownLayers" ngbDropdownToggle>Кодировка исходных файлов: {{ chosenEncoding }}</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownLayers" style="max-height: 70vh; overflow-y: auto">
+                    <button
+                        [class]="oneEncoding === chosenEncoding ? 'bg-primary-subtle' : ''"
+                        ngbDropdownItem
+                        *ngFor="let oneEncoding of supportedEncoding"
+                        (click)="changeEncoding(oneEncoding)"
+                    >
+                        <div>{{ oneEncoding }}</div>
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn btn-outline-success" (click)="createDocx()">Создать файл</button>
+        </div>
+    </div>
+</div>
+
+<app-settings-menu *ngIf="isShowSettings" (closeSettingsMenu)="manageSettingsMenu(false)"></app-settings-menu>

@@ -6,8 +6,8 @@ export function CheckRegedit() {
   return window['go']['main']['App']['CheckRegedit']();
 }
 
-export function CreateDocx(arg1, arg2) {
-  return window['go']['main']['App']['CreateDocx'](arg1, arg2);
+export function CreateDocx(arg1, arg2, arg3) {
+  return window['go']['main']['App']['CreateDocx'](arg1, arg2, arg3);
 }
 
 export function HandleRootDirectorySetOnProgrammStart() {
