@@ -82,6 +82,10 @@ export class AppComponent {
             .catch((err) => alert(err));
     }
 
+    testReader() {
+        this.pcService.readFilesDataForConvertion(this.filesChosen, (this.outFolder != "" ? this.outFolder : "C:/") + `${this.outName}.docx`);
+    }
+
     /**
      * Прочитать содержимое корневой папки с помощью сервиса
      */
@@ -89,7 +93,6 @@ export class AppComponent {
         this.pcService
             .readFilesInDirectory(this.rootFolder, this.isRecursive)
             .then((result) => {
-                console.log(result);
                 this.filesInRootDirectory = [];
                 this.filesInRootDirectory.push(...result);
             })
@@ -152,7 +155,6 @@ export class AppComponent {
     createDocx() {
         this.pcService
             .createDocx(this.chosenEncoding, this.filesChosen, this.outFolder != "" ? this.outFolder : "C:/", `${this.outName}.docx`)
-            // .then((docxPath) => alert(`Файл создан\n${docxPath}`))
             .catch((err) => alert(`Ошибка создания файла\n${err}`));
     }
 

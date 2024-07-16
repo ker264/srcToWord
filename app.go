@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -13,8 +14,6 @@ import (
 	v2runtime "github.com/wailsapp/wails/v2/pkg/runtime"
 	"golang.org/x/sys/windows/registry"
 )
-
-const registryAppName string = "srcToWord"
 
 // App struct
 type App struct {
@@ -30,9 +29,6 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-}
-
-func (a *App) domReady(ctx context.Context) {
 }
 
 func (a *App) HandleRootDirectorySetOnProgrammStart() (string, error) {
@@ -235,6 +231,36 @@ func (a *App) ReadDirectory(directoryPath string, isRecursive bool) ([]IFileName
 	}
 
 	return fileNames, nil
+}
+
+func (a *App) ReadFilesForDocx(filesList []IFileNames) ([]string, error) {
+	var filesData []string
+	for _, value := range filesList {
+		fileContent, err := os.ReadFile(value.Absolute)
+		if err != nil {
+			return filesData, err
+		}
+
+		filesData = append(filesData, string(fileContent))
+	}
+	return filesData, nil
+}
+
+func (a *App) SaveWordFile(path string, fileDataBase64 string) error {
+
+	fileData, err := base64.StdEncoding.DecodeString(fileDataBase64)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(path, fileData, 0644)
+	if err != nil {
+		return err
+	}
+
+	openExplorer(path)
+
+	return nil
 }
 
 func (a *App) CreateDocx(filesList []IFileNames, outParts []string, encoding string) (string, error) {

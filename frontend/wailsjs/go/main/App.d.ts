@@ -10,6 +10,10 @@ export function HandleRootDirectorySetOnProgrammStart():Promise<string>;
 
 export function ReadDirectory(arg1:string,arg2:boolean):Promise<Array<main.IFileNames>>;
 
+export function ReadFilesForDocx(arg1:Array<main.IFileNames>):Promise<Array<string>>;
+
+export function SaveWordFile(arg1:string,arg2:string):Promise<void>;
+
 export function SelectDirectory():Promise<string>;
 
 export function SelectFilesDirectly():Promise<Array<main.IFileNames>>;

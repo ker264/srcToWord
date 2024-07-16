@@ -18,6 +18,14 @@ export function ReadDirectory(arg1, arg2) {
   return window['go']['main']['App']['ReadDirectory'](arg1, arg2);
 }
 
+export function ReadFilesForDocx(arg1) {
+  return window['go']['main']['App']['ReadFilesForDocx'](arg1);
+}
+
+export function SaveWordFile(arg1, arg2) {
+  return window['go']['main']['App']['SaveWordFile'](arg1, arg2);
+}
+
 export function SelectDirectory() {
   return window['go']['main']['App']['SelectDirectory']();
 }
