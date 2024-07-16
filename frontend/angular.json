@@ -58,10 +58,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "electronAngular:build:production"
+              "buildTarget": "electronAngular:build:production"
             },
             "development": {
-              "browserTarget": "electronAngular:build:development"
+              "buildTarget": "electronAngular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -69,7 +69,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "electronAngular:build"
+            "buildTarget": "electronAngular:build"
           }
         },
         "test": {
