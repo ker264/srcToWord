@@ -6,10 +6,6 @@ export function CheckRegedit() {
   return window['go']['main']['App']['CheckRegedit']();
 }
 
-export function CreateDocx(arg1, arg2, arg3) {
-  return window['go']['main']['App']['CreateDocx'](arg1, arg2, arg3);
-}
-
 export function HandleRootDirectorySetOnProgrammStart() {
   return window['go']['main']['App']['HandleRootDirectorySetOnProgrammStart']();
 }
@@ -18,12 +14,12 @@ export function ReadDirectory(arg1, arg2) {
   return window['go']['main']['App']['ReadDirectory'](arg1, arg2);
 }
 
-export function ReadFilesForDocx(arg1) {
-  return window['go']['main']['App']['ReadFilesForDocx'](arg1);
+export function ReadFilesForDocx(arg1, arg2) {
+  return window['go']['main']['App']['ReadFilesForDocx'](arg1, arg2);
 }
 
-export function SaveWordFile(arg1, arg2) {
-  return window['go']['main']['App']['SaveWordFile'](arg1, arg2);
+export function SaveWordFile(arg1, arg2, arg3) {
+  return window['go']['main']['App']['SaveWordFile'](arg1, arg2, arg3);
 }
 
 export function SelectDirectory() {

@@ -87,7 +87,6 @@
             <img height="32" width="32" src="assets/icon-settings.png" />
         </button>
         <div class="flex flex-row align-items-center gap-2">
-            <button class="btn btn-outline-success" (click)="testReader()">Создать файл</button>
             <div ngbDropdown class="d-inline-block" placement="top-end">
                 <button type="button" class="btn btn-outline-primary" id="dropdownLayers" ngbDropdownToggle>
                     Кодировка исходных файлов: {{ chosenEncoding }}
@@ -104,7 +103,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-outline-success" (click)="createDocx()">Создать файл</button>
+            <button class="btn btn-outline-success" (click)="testReader()">Создать файл</button>
         </div>
     </div>
 </div>

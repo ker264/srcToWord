@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -13,6 +12,7 @@ import (
 
 	v2runtime "github.com/wailsapp/wails/v2/pkg/runtime"
 	"golang.org/x/sys/windows/registry"
+	"golang.org/x/text/encoding/charmap"
 )
 
 // App struct
@@ -127,7 +127,7 @@ func addToRegeditFromKey(rootKey registry.Key) error {
 	}
 
 	// Устанавливаем путь к иконке
-	err = subkey.SetStringValue("Icon", filepath.Join(filepath.Dir(os.Args[0]), "docxGeneratorStandalone.exe"))
+	err = subkey.SetStringValue("Icon", os.Args[0])
 	if err != nil {
 		return err
 	}
@@ -157,7 +157,6 @@ type IFileNames struct {
 func (a *App) SelectDirectory() (string, error) {
 	result, err := v2runtime.OpenDirectoryDialog(a.ctx, v2runtime.OpenDialogOptions{
 		Title:                "Выбрать директорию",
-		DefaultDirectory:     ".",
 		ShowHiddenFiles:      true,
 		CanCreateDirectories: true,
 	})
@@ -173,7 +172,6 @@ func (a *App) SelectDirectory() (string, error) {
 func (a *App) SelectFilesDirectly() ([]IFileNames, error) {
 	result, err := v2runtime.OpenMultipleFilesDialog(a.ctx, v2runtime.OpenDialogOptions{
 		Title:                "Выбрать файлы для добавления",
-		DefaultDirectory:     ".",
 		ShowHiddenFiles:      true,
 		CanCreateDirectories: true,
 	})
@@ -233,7 +231,29 @@ func (a *App) ReadDirectory(directoryPath string, isRecursive bool) ([]IFileName
 	return fileNames, nil
 }
 
-func (a *App) ReadFilesForDocx(filesList []IFileNames) ([]string, error) {
+func decodeIfNeeded(fileData, encoding string) string {
+	if encoding == "utf-8" {
+		return fileData
+	}
+
+	var chosenCharmap *charmap.Charmap
+	switch encoding {
+	case "koi8-r":
+		chosenCharmap = charmap.KOI8R
+	case "cp1251":
+		chosenCharmap = charmap.Windows1251
+	case "cp866":
+		chosenCharmap = charmap.CodePage866
+	}
+
+	decoder := chosenCharmap.NewDecoder()
+	decodedFile, _ := decoder.String(fileData)
+
+	return decodedFile
+}
+
+func (a *App) ReadFilesForDocx(filesList []IFileNames, encoding string) ([]string, error) {
+
 	var filesData []string
 	for _, value := range filesList {
 		fileContent, err := os.ReadFile(value.Absolute)
@@ -241,59 +261,27 @@ func (a *App) ReadFilesForDocx(filesList []IFileNames) ([]string, error) {
 			return filesData, err
 		}
 
-		filesData = append(filesData, string(fileContent))
+		filesData = append(filesData, decodeIfNeeded(string(fileContent), encoding))
 	}
 	return filesData, nil
 }
 
-func (a *App) SaveWordFile(path string, fileDataBase64 string) error {
-
+func (a *App) SaveWordFile(path string, name string, fileDataBase64 string) error {
 	fileData, err := base64.StdEncoding.DecodeString(fileDataBase64)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(path, fileData, 0644)
+	pathName := filepath.Join(path, name)
+
+	err = os.WriteFile(pathName, fileData, 0644)
 	if err != nil {
 		return err
 	}
 
-	openExplorer(path)
+	openExplorer(pathName)
 
 	return nil
-}
-
-func (a *App) CreateDocx(filesList []IFileNames, outParts []string, encoding string) (string, error) {
-	jsonData, err := json.Marshal(filesList)
-
-	pathToDocx := filepath.Join(outParts...)
-
-	if err != nil {
-		fmt.Println("Ошибка при преобразовании в JSON:", err)
-		return "", err
-	}
-
-	// Вызов docx makera
-	// Путь к исполняемому файлу
-	cmdPath := filepath.Join(filepath.Dir(os.Args[0]), "docxGeneratorStandalone.exe")
-
-	// Аргументы для передачи в исполняемый файл
-	args := []string{string(jsonData), pathToDocx, encoding}
-
-	// Создание команды для выполнения
-	cmd := exec.Command(cmdPath, args...)
-
-	// Запуск команды
-	err = cmd.Run()
-	if err != nil {
-		fmt.Println("Ошибка при запуске исполняемого файла:", err)
-		return "", err
-	}
-
-	fmt.Println("Исполняемый файл успешно выполнен")
-	openExplorer(pathToDocx)
-
-	return pathToDocx, nil
 }
 
 func openExplorer(path string) {

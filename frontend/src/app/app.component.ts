@@ -30,31 +30,7 @@ export class AppComponent {
 
     isShowSettings = false;
 
-    supportedEncoding: string[] = [
-        "ascii",
-        "utf-8",
-        "utf-16le",
-        "ucs-2",
-        "base64",
-        "base64url",
-        "latin1",
-        "binary",
-        "hex",
-        "koi8-r",
-        "koi8-u",
-        "koi8-ru",
-        "koi8-t",
-        "cp874",
-        "cp1250",
-        "cp1251",
-        "cp1252",
-        "cp1253",
-        "cp1254",
-        "cp1255",
-        "cp1256",
-        "cp1257",
-        "cp1258",
-    ];
+    supportedEncoding: string[] = ["utf-8", "koi8-r", "cp866", "cp1251"];
 
     chosenEncoding: string = "utf-8";
 
@@ -83,7 +59,7 @@ export class AppComponent {
     }
 
     testReader() {
-        this.pcService.readFilesDataForConvertion(this.filesChosen, (this.outFolder != "" ? this.outFolder : "C:/") + `${this.outName}.docx`);
+        this.pcService.readFilesDataForConvertion(this.filesChosen, this.outFolder != "" ? this.outFolder : "C:/", `${this.outName}.docx`, this.chosenEncoding);
     }
 
     /**
@@ -150,12 +126,6 @@ export class AppComponent {
             .directFileChoose()
             .then((list) => this.filesChosen.push(..._.differenceBy(list, this.filesChosen, "absolute")))
             .catch((err) => console.log(err));
-    }
-
-    createDocx() {
-        this.pcService
-            .createDocx(this.chosenEncoding, this.filesChosen, this.outFolder != "" ? this.outFolder : "C:/", `${this.outName}.docx`)
-            .catch((err) => alert(`Ошибка создания файла\n${err}`));
     }
 
     changeEncoding(newEncoding: string) {
