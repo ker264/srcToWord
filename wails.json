@@ -1,0 +1,13 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "srcToWord",
+  "outputfilename": "srcToWord",
+  "frontend:build": "npx ng build",
+  "frontend:install": "npm install",
+  "frontend:dev:watcher": "npx ng serve",
+  "frontend:dev:serverUrl": "http://localhost:4200",
+  "author": {
+    "name": "ker264",
+    "email": "ker.264@yandex.ru"
+  }
+}

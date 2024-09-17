@@ -1,0 +1,73 @@
+.main-container {
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+input-group-text {
+  width: 100%;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+#top-div {
+  flex-grow: 0;
+}
+
+#bot-div {
+  flex-grow: 1;
+
+  div {
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+
+  .list-div {
+    flex: 4;
+  }
+
+  :not(#arrows) {
+    justify-content: flex-start;
+  }
+}
+
+#additionalSettings {
+  display: flex;
+
+  div {
+    flex: 1;
+  }
+
+  div.checkbox-div {
+    flex: 3;
+  }
+}
+
+.no-border {
+  border: none;
+}
+
+app-items-list {
+  width: 100%;
+}
+
+#deleteFromListImg {
+  transform: rotate(180deg);
+}
+
+#buttonsDiv {
+  justify-content: space-between;
+
+  #settingsButton {
+    padding: 5px;
+  }
+}
