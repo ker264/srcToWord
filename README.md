@@ -16,6 +16,12 @@
 4. Select the location where you want to save the resulting file.
 5. Click the "Создать файл" button.
 
+## Screenshots
+
+![Main window](https://i.imgur.com/mHXqAaR.png "Main window")
+
+![Selecting files](https://i.imgur.com/jbpZf1T.png "Selecting files")
+
 ## How to build
 
 1. Install Go.
